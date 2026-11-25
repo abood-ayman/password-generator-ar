@@ -1,28 +1,27 @@
-# مولد كلمات المرور القوية
+# Password Generator | مولد كلمات المرور القوية
 
-كلمة مرور عشوائية آمنة تُولَّد على جهازك ولا تغادره أبدًا
+Generate strong random passwords with the length and character types you choose, with a live strength meter. Arabic interface.
 
-**رابط الأداة (تعمل فورًا من المتصفح):** https://abood-ayman.github.io/password-generator-ar/
+**Live app:** https://abood-ayman.github.io/password-generator-ar/
 
-## ما الذي تقدمه؟
+![Password Generator, mobile view](docs/screenshot.svg)
 
-- توليد عشوائي حقيقي باستخدام مولد التشفير في متصفحك
-- تحكم في الطول (٤–٦٤) وأنواع الرموز: كبيرة، صغيرة، أرقام، رموز خاصة
-- خيار استبعاد الحروف الملتبسة (مثل l و 1 و O و 0)
-- مقياس قوة فوري مبني على الإنتروبيا، وزر نسخ بنقرة واحدة
+This is a personal project, built with AI tools.
 
-## الخصوصية
+## Features
+- True randomness using your browser's crypto generator
+- Control length (4-64) and character types: upper, lower, digits, symbols
+- Option to exclude ambiguous characters (l, 1, O, 0)
+- Entropy-based strength meter and one-click copy
 
-تعمل الأداة بالكامل داخل متصفحك (HTML/CSS/JavaScript فقط). لا يوجد خادم، ولا حسابات، ولا تتبّع، ولا تُرسل أو تُحفظ أي بيانات تدخلها خارج جهازك.
+## Privacy
+Everything runs in your browser. No data is stored or sent anywhere.
 
-## التقنية
+## Run locally
+Open `index.html` in any browser. It is a single static page with no dependencies.
 
-صفحة ثابتة واحدة بلا أي مكتبات خارجية، تعمل على الهاتف والحاسوب، وتُستضاف مجانًا عبر GitHub Pages.
+## Status
+Stable.
 
-## ملاحظة شفافية
-
-بُنيت هذه الأداة بمساعدة أدوات ذكاء اصطناعي، ورُوعيَت بساطتها وفائدتها المباشرة.
-
-## الرخصة
-
-MIT — انظر ملف LICENSE.
+## Copyright
+MIT License - Copyright (c) 2026 Abdullah Ayman.
