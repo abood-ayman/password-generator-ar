@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>مولد كلمات المرور القوية | أداة مجانية</title>
+<meta name="description" content="ولّد كلمة مرور عشوائية قوية بالطول والأنواع التي تختارها، مع مقياس قوة فوري. التوليد يتم على جهازك فقط ولا يُرسل شيء لأي خادم.">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Tahoma,'Segoe UI',Arial,sans-serif;background:#f1f5f9;color:#1e293b;line-height:1.7;min-height:100vh;display:flex;flex-direction:column}
+header{background:linear-gradient(135deg,#0f766e,#14b8a6);color:#fff;padding:1.6rem 1rem;text-align:center}
+header h1{font-size:1.5rem}
+.tagline{opacity:.92;font-size:.95rem;margin-top:.25rem}
+main{flex:1;width:100%;max-width:560px;margin:0 auto;padding:1rem}
+.card{background:#fff;border-radius:14px;padding:1.25rem;box-shadow:0 1px 4px rgba(15,23,42,.08);margin-bottom:1rem}
+.card h2{font-size:1.1rem;margin-bottom:.4rem;color:#0f766e}
+label{display:block;font-weight:700;margin:.75rem 0 .3rem}
+input,select,textarea{width:100%;padding:.7rem .8rem;border:1.5px solid #cbd5e1;border-radius:10px;font-size:1rem;font-family:inherit;background:#fff;color:#1e293b}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#0f766e;box-shadow:0 0 0 3px rgba(20,184,166,.18)}
+.row{display:flex;gap:.6rem}
+.row>*{flex:1;min-width:0}
+button{display:inline-block;width:100%;padding:.8rem;border:0;border-radius:10px;background:#0f766e;color:#fff;font-size:1.05rem;font-weight:700;cursor:pointer;font-family:inherit;margin-top:1rem}
+button:hover{background:#115e59}
+button.ghost{background:#e2e8f0;color:#1e293b}
+.result{background:#ecfdf5;border:1.5px solid #6ee7b7;border-radius:10px;padding:1rem;margin-top:1rem;font-size:1.05rem;word-break:break-word}
+.result b{color:#047857}
+.result.warn{background:#fffbeb;border-color:#fcd34d}
+.result.warn b{color:#b45309}
+.result.bad{background:#fef2f2;border-color:#fca5a5}
+.result.bad b{color:#b91c1c}
+.muted{color:#64748b;font-size:.85rem}
+footer{background:#0f172a;color:#94a3b8;text-align:center;padding:1.2rem 1rem;font-size:.85rem;line-height:1.9}
+footer a{color:#5eead4}
+table{width:100%;border-collapse:collapse;margin-top:.5rem}
+th,td{padding:.5rem;border-bottom:1px solid #e2e8f0;text-align:right;font-size:.95rem}
+.big{font-size:1.6rem;font-weight:800}
+.hidden{display:none}
+.chk{display:flex;align-items:center;gap:.5rem;margin:.3rem 0}
+.chk input{width:auto}
+
+</style>
+</head>
+<body>
+<header>
+<h1>مولد كلمات المرور القوية</h1>
+<p class="tagline">كلمة مرور عشوائية آمنة تُولَّد على جهازك ولا تغادره أبدًا</p>
+</header>
+<main>
+<div class="card">
+<h2>إعدادات كلمة المرور</h2>
+<label for="len">الطول: <span id="lenVal">16</span></label>
+<input type="range" id="len" min="4" max="64" value="16" oninput="g('lenVal').textContent=this.value; gen()">
+<label class="chk"><input type="checkbox" id="upper" checked onchange="gen()"> حروف كبيرة (A-Z)</label>
+<label class="chk"><input type="checkbox" id="lower" checked onchange="gen()"> حروف صغيرة (a-z)</label>
+<label class="chk"><input type="checkbox" id="digits" checked onchange="gen()"> أرقام (0-9)</label>
+<label class="chk"><input type="checkbox" id="symbols" checked onchange="gen()"> رموز خاصة (!@#$...)</label>
+<label class="chk"><input type="checkbox" id="noAmb" onchange="gen()"> استبعد الحروف الملتبسة (l, 1, O, 0)</label>
+<button onclick="gen()">ولّد كلمة جديدة</button>
+<button class="ghost" onclick="copyPw()">انسخ</button>
+</div>
+<div id="out" class="result hidden"></div>
+
+</main>
+<footer>
+<p>تعمل هذه الأداة بالكامل على جهازك، ولا تُحفظ أو تُرسل أي بيانات إلى أي خادم.</p>
+<p>أداة مجانية مفتوحة المصدر · بُنيت بمساعدة أدوات ذكاء اصطناعي · <a href="https://github.com/abood-ayman/password-generator-ar">الكود على GitHub</a></p>
+</footer>
+<script>
+window.__jserrors=[];window.addEventListener('error',function(e){window.__jserrors.push(String(e.message))});
+const g = id => document.getElementById(id);
+
+const SETS = {
+  upper: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+  lower: 'abcdefghijklmnopqrstuvwxyz',
+  digits: '0123456789',
+  symbols: '!@#$%^&*()-_=+[]{};:,.<>?/'
+};
+const AMBIGUOUS = /[l1IO0]/g;
+
+function charset(opts) {
+  let s = '';
+  if (opts.upper) s += SETS.upper;
+  if (opts.lower) s += SETS.lower;
+  if (opts.digits) s += SETS.digits;
+  if (opts.symbols) s += SETS.symbols;
+  if (opts.noAmb) s = s.replace(AMBIGUOUS, '');
+  return s;
+}
+
+function generate(len, opts) {
+  const cs = charset(opts);
+  if (!cs || len <= 0) return '';
+  const out = [];
+  const max = 256 - (256 % cs.length);
+  while (out.length < len) {
+    const buf = new Uint8Array(len * 2);
+    crypto.getRandomValues(buf);
+    for (const b of buf) {
+      if (b < max && out.length < len) out.push(cs[b % cs.length]);
+    }
+  }
+  return out.join('');
+}
+
+function entropyBits(len, opts) {
+  const cs = charset(opts);
+  return cs ? Math.round(len * Math.log2(cs.length)) : 0;
+}
+
+function strengthLabel(bits) {
+  if (bits < 45) return ['ضعيفة', 'bad'];
+  if (bits < 65) return ['متوسطة', 'warn'];
+  if (bits < 90) return ['قوية', ''];
+  return ['ممتازة', ''];
+}
+
+function opts() {
+  return { upper: g('upper').checked, lower: g('lower').checked, digits: g('digits').checked, symbols: g('symbols').checked, noAmb: g('noAmb').checked };
+}
+
+let lastPw = '';
+function gen() {
+  const len = parseInt(g('len').value, 10);
+  const o = opts();
+  const el = g('out');
+  el.classList.remove('hidden', 'warn', 'bad');
+  if (!charset(o)) { el.classList.add('warn'); el.innerHTML = '<p>اختر نوعًا واحدًا من الرموز على الأقل.</p>'; lastPw = ''; return; }
+  lastPw = generate(len, o);
+  const bits = entropyBits(len, o);
+  const [label, cls] = strengthLabel(bits);
+  if (cls) el.classList.add(cls);
+  el.innerHTML = '<p class="big" dir="ltr" style="text-align:center"><b>' + lastPw + '</b></p>' +
+                 '<p>القوة: <b>' + label + '</b> <span class="muted">(' + bits + ' بت إنتروبيا)</span></p>';
+}
+
+function copyPw() {
+  if (!lastPw) return;
+  const done = () => { g('out').insertAdjacentHTML('beforeend', '<p class="muted">نُسخت إلى الحافظة.</p>'); };
+  if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(lastPw).then(done, done);
+  else done();
+}
+
+window.__test = function () {
+  const all = { upper: true, lower: true, digits: true, symbols: true, noAmb: false };
+  const seen = new Set();
+  let okLen = true, okChars = true;
+  const csAll = charset(all);
+  for (let i = 0; i < 50; i++) {
+    const p = generate(20, all);
+    if (p.length !== 20) okLen = false;
+    if (![...p].every(c => csAll.includes(c))) okChars = false;
+    seen.add(p);
+  }
+  const csNoAmb = charset({ upper: true, lower: true, digits: true, symbols: false, noAmb: true });
+  const pwNoAmb = generate(200, { upper: true, lower: true, digits: true, symbols: false, noAmb: true });
+  const digitsOnly = generate(10, { upper: false, lower: false, digits: true, symbols: false, noAmb: false });
+  const ok = okLen && okChars && seen.size >= 45 &&
+             !AMBIGUOUS.test(csNoAmb) && !AMBIGUOUS.test(pwNoAmb) &&
+             /^[0-9]{10}$/.test(digitsOnly) &&
+             entropyBits(16, all) === Math.round(16 * Math.log2(charset(all).length));
+  return { pass: ok, details: { unique: seen.size, bits16: entropyBits(16, all) } };
+};
+
+window.__demo = function () { gen(); };
+
+</script>
+</body>
+</html>
