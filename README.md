@@ -4,6 +4,8 @@ Generate strong random passwords with the length and character types you choose,
 
 **Live app:** https://abood-ayman.github.io/password-generator-ar/
 
+**LinkedIn:** [Project entry](https://www.linkedin.com/in/abdullah-ayman-1678b737b/details/projects/)
+
 ![Password Generator, mobile view](docs/screenshot.svg)
 
 This is a personal project, built with AI tools.
